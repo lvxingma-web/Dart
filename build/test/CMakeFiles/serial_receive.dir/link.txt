@@ -1,0 +1,1 @@
+/usr/bin/c++ -I/usr/local/include CMakeFiles/serial_receive.dir/serial_receive.cpp.o -o serial_receive  -lpthread

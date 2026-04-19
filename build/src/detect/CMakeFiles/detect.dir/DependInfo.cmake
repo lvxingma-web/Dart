@@ -8,8 +8,9 @@ set(CMAKE_DEPENDS_LANGUAGES
 
 # The set of dependency files which are needed:
 set(CMAKE_DEPENDS_DEPENDENCY_FILES
-  "/home/chensally/下载/Vision_Code/src/detect/src/Detect.cpp" "src/detect/CMakeFiles/detect.dir/src/Detect.cpp.o" "gcc" "src/detect/CMakeFiles/detect.dir/src/Detect.cpp.o.d"
-  "/home/chensally/下载/Vision_Code/src/detect/src/openvino/OpenvinoInfer.cpp" "src/detect/CMakeFiles/detect.dir/src/openvino/OpenvinoInfer.cpp.o" "gcc" "src/detect/CMakeFiles/detect.dir/src/openvino/OpenvinoInfer.cpp.o.d"
+  "/home/ganjie/Vision_Code/src/detect/src/Detect.cpp" "src/detect/CMakeFiles/detect.dir/src/Detect.cpp.o" "gcc" "src/detect/CMakeFiles/detect.dir/src/Detect.cpp.o.d"
+  "/home/ganjie/Vision_Code/src/detect/src/openvino/OpenvinoInfer.cpp" "src/detect/CMakeFiles/detect.dir/src/openvino/OpenvinoInfer.cpp.o" "gcc" "src/detect/CMakeFiles/detect.dir/src/openvino/OpenvinoInfer.cpp.o.d"
+  "/home/ganjie/Vision_Code/src/detect/src/traditional/traditional_detect.cpp" "src/detect/CMakeFiles/detect.dir/src/traditional/traditional_detect.cpp.o" "gcc" "src/detect/CMakeFiles/detect.dir/src/traditional/traditional_detect.cpp.o.d"
   )
 
 # Targets to which this target links which contain Fortran sources.

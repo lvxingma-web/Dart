@@ -1,0 +1,13 @@
+{
+	"InstallScripts" : 
+	[
+		"/home/ganjie/Vision_Code/build/cmake_install.cmake",
+		"/home/ganjie/Vision_Code/build/src/utility/cmake_install.cmake",
+		"/home/ganjie/Vision_Code/build/src/capture/cmake_install.cmake",
+		"/home/ganjie/Vision_Code/build/src/sensors/cmake_install.cmake",
+		"/home/ganjie/Vision_Code/build/src/detect/cmake_install.cmake",
+		"/home/ganjie/Vision_Code/build/src/track/cmake_install.cmake",
+		"/home/ganjie/Vision_Code/build/src/mouse/cmake_install.cmake"
+	],
+	"Parallel" : false
+}

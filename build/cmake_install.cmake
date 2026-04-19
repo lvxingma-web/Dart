@@ -1,4 +1,4 @@
-# Install script for directory: /home/chensally/下载/Vision_Code
+# Install script for directory: /home/ganjie/Vision_Code
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -44,34 +44,40 @@ endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for the subdirectory.
-  include("/home/chensally/下载/Vision_Code/build/src/utility/cmake_install.cmake")
+  include("/home/ganjie/Vision_Code/build/src/utility/cmake_install.cmake")
 endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for the subdirectory.
-  include("/home/chensally/下载/Vision_Code/build/src/capture/cmake_install.cmake")
+  include("/home/ganjie/Vision_Code/build/src/capture/cmake_install.cmake")
 endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for the subdirectory.
-  include("/home/chensally/下载/Vision_Code/build/src/sensors/cmake_install.cmake")
+  include("/home/ganjie/Vision_Code/build/src/sensors/cmake_install.cmake")
 endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for the subdirectory.
-  include("/home/chensally/下载/Vision_Code/build/src/detect/cmake_install.cmake")
+  include("/home/ganjie/Vision_Code/build/src/detect/cmake_install.cmake")
 endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for the subdirectory.
-  include("/home/chensally/下载/Vision_Code/build/src/track/cmake_install.cmake")
+  include("/home/ganjie/Vision_Code/build/src/track/cmake_install.cmake")
 endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for the subdirectory.
-  include("/home/chensally/下载/Vision_Code/build/src/mouse/cmake_install.cmake")
+  include("/home/ganjie/Vision_Code/build/src/mouse/cmake_install.cmake")
 endif()
 
+string(REPLACE ";" "\n" CMAKE_INSTALL_MANIFEST_CONTENT
+       "${CMAKE_INSTALL_MANIFEST_FILES}")
+if(CMAKE_INSTALL_LOCAL_ONLY)
+  file(WRITE "/home/ganjie/Vision_Code/build/install_local_manifest.txt"
+     "${CMAKE_INSTALL_MANIFEST_CONTENT}")
+endif()
 if(CMAKE_INSTALL_COMPONENT)
   if(CMAKE_INSTALL_COMPONENT MATCHES "^[a-zA-Z0-9_.+-]+$")
     set(CMAKE_INSTALL_MANIFEST "install_manifest_${CMAKE_INSTALL_COMPONENT}.txt")
@@ -85,8 +91,6 @@ else()
 endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
-  string(REPLACE ";" "\n" CMAKE_INSTALL_MANIFEST_CONTENT
-       "${CMAKE_INSTALL_MANIFEST_FILES}")
-  file(WRITE "/home/chensally/下载/Vision_Code/build/${CMAKE_INSTALL_MANIFEST}"
+  file(WRITE "/home/ganjie/Vision_Code/build/${CMAKE_INSTALL_MANIFEST}"
      "${CMAKE_INSTALL_MANIFEST_CONTENT}")
 endif()

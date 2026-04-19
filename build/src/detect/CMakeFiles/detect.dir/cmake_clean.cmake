@@ -3,6 +3,8 @@ file(REMOVE_RECURSE
   "CMakeFiles/detect.dir/src/Detect.cpp.o.d"
   "CMakeFiles/detect.dir/src/openvino/OpenvinoInfer.cpp.o"
   "CMakeFiles/detect.dir/src/openvino/OpenvinoInfer.cpp.o.d"
+  "CMakeFiles/detect.dir/src/traditional/traditional_detect.cpp.o"
+  "CMakeFiles/detect.dir/src/traditional/traditional_detect.cpp.o.d"
 )
 
 # Per-language clean rules from dependency scanning.

@@ -8,7 +8,7 @@ set(CMAKE_DEPENDS_LANGUAGES
 
 # The set of dependency files which are needed:
 set(CMAKE_DEPENDS_DEPENDENCY_FILES
-  "/home/chensally/下载/Vision_Code/src/capture/src/Capture.cpp" "src/capture/CMakeFiles/capture.dir/src/Capture.cpp.o" "gcc" "src/capture/CMakeFiles/capture.dir/src/Capture.cpp.o.d"
+  "/home/ganjie/Vision_Code/src/capture/src/Capture.cpp" "src/capture/CMakeFiles/capture.dir/src/Capture.cpp.o" "gcc" "src/capture/CMakeFiles/capture.dir/src/Capture.cpp.o.d"
   )
 
 # Targets to which this target links which contain Fortran sources.
