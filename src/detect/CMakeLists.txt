@@ -1,19 +1,26 @@
 cmake_minimum_required(VERSION 3.25)
 project(detect)
-SET(OPENVINO_PATH "/opt/intel/openvino/runtime/include")
+SET(OPENVINO_PATH "/opt/intel/l_openvino_toolkit_ubuntu22_2024.6.0.17404.4c0f47d2335_x86_64/runtime/include")
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${TORCH_CXX_FLAGS}")
 
-file(GLOB_RECURSE ${PROJECT_NAME}_src ${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp ${CMAKE_CURRENT_SOURCE_DIR}/src/*.c)
+file(GLOB_RECURSE ${PROJECT_NAME}_src 
+                  ${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp 
+                  ${CMAKE_CURRENT_SOURCE_DIR}/src/*.c
+                  ${CMAKE_CURRENT_SOURCE_DIR}/src/traditional/*.cpp
+                  )
 # message(STATUS "src files: ${${PROJECT_NAME}_src}")
 
 add_library(${PROJECT_NAME} OBJECT ${${PROJECT_NAME}_src})
 target_compile_features(${PROJECT_NAME} PUBLIC c_std_99 cxx_std_20)
 
 target_include_directories(${PROJECT_NAME} PUBLIC "${OPENVINO_PATH}")
-target_include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/inc)
+target_include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/inc
+                                                   ${CMAKE_CURRENT_SOURCE_DIR}/inc/traditional
+                                                   ${CMAKE_CURRENT_SOURCE_DIR}/inc/openvino
+                                                   )
 
-target_link_libraries(${PROJECT_NAME} PUBLIC "/opt/intel/openvino/runtime/lib/intel64/libopenvino.so")
+target_link_libraries(${PROJECT_NAME} PUBLIC "/opt/intel/l_openvino_toolkit_ubuntu22_2024.6.0.17404.4c0f47d2335_x86_64/runtime/lib/intel64/libopenvino.so")
 
 target_include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/../threads/inc)
 

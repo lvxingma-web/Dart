@@ -1,6 +1,8 @@
 #ifndef OPENVINO_INFER_HPP_
 #define OPENVINO_INFER_HPP_
+
 #include <openvino/openvino.hpp>
+
 #include <opencv2/opencv.hpp>
 #include <opencv2/dnn.hpp>
 

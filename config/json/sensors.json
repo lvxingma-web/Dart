@@ -83,12 +83,12 @@
       "exposure": {
         "auto": 0,
         "normal": 10000,
-        "red_exposure": 10000,
-        "blue_exposure": 10000
+        "red_exposure": 4500,
+        "blue_exposure": 4500
       },
       "gain": {
         "auto": 0,
-        "value": 18
+        "value": 10
       },
       "offset": {
         "v_offset": 304
@@ -103,7 +103,7 @@
 
   },
   "serialport": {
-    "port": "/tmp/ttyVUSB",
+    "port": "/dev/ttyACM0",
     "baudrate": 921600,
     "databits": 8,
     "stopbits": 1,

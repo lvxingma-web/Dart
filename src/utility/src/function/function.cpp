@@ -70,6 +70,6 @@ std::string function::getLocalTime() {
 
 std::string function::getBagPath() {
     auto now_time_str = function::getLocalTime();
-    return "/home/chensally/下载/Vision_Code/bag/" + now_time_str + ".mcap";
+    return "../bag/" + now_time_str + ".mcap";
 }
 

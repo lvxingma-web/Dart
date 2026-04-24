@@ -2,18 +2,48 @@
 
 #include "function/function.hpp"
 #include "global/Config.hpp"
+#include "traditional/traditional_detect.hpp"                                      
 
 //模型推理
 Detect::Detect(const char *mode) : mode_(mode) {
-    std::map<std::string, std::string> path;
-    path.insert(std::pair<std::string, std::string>("XML", J_DETECT.config_["path"]["xml"]));
-    path.insert(std::pair<std::string, std::string>("BIN", J_DETECT.config_["path"]["bin"]));
-    path.insert(std::pair<std::string, std::string>("DEVICE", J_DETECT.config_["path"]["device"]));
-    this->openvino_infer_ = new OpenvinoInfer(path);
+    //传统视觉检测
+    if(std::string(mode_) == "traditional"){
+        this->traditional_detector_ = new GreenLightDetector();
+        this ->openvino_infer_ = nullptr;
+        //std::cout << "Detector initialized with traditional mode" << std::endl;
+    }else{
+        //深度学习检测
+        std::map<std::string, std::string> path;
+
+        std::string project_root = "/home/ganjie/Vision_Code/";
+        std::string xml_path = project_root + "config/openvino/Katrin.xml";
+        std::string bin_path = project_root + "config/openvino/Katrin.bin";
+        std::string device = "CPU";
+
+        path.insert(std::pair<std::string, std::string>("XML", xml_path));
+        path.insert(std::pair<std::string, std::string>("BIN", bin_path));
+        path.insert(std::pair<std::string, std::string>("DEVICE", device));
+
+        this->openvino_infer_ = new OpenvinoInfer(path);
+        this->traditional_detector_ = nullptr;
+        //std::cout << "Detector initialized with deep learning mode" << std::endl;
+    }
 }
 
 Detect::~Detect() {
-    delete this->openvino_infer_;
+    if(this->openvino_infer_){
+        delete this->openvino_infer_;
+        this->openvino_infer_ = nullptr;
+    }
+    if(this->traditional_detector_){
+        delete this->traditional_detector_;
+        this->traditional_detector_ = nullptr;
+    }
+    std::cout<< "detector destroy"<<std::endl;
+}
+
+bool Detect::useTraditionalDetector() const{
+    return mode_ == "traditional";
 }
 
 void Detect::detect(
@@ -32,7 +62,42 @@ void Detect::detect(
 
     auto message = std::move(opt_message_.value());
 
-    auto infer_results = this->openvino_infer_->infer(message.img, cv::Size(640, 384), 0, this->startup_);
+    std::vector<OpenvinoInfer::Light> infer_results;
+    //根据检测模式选择不同的检测方法
+    if (useTraditionalDetector()){
+        //使用传统视觉检测
+        if(this->traditional_detector_== nullptr){
+            std::cout<< "traditional detector is not null"<<std::endl;
+            return;
+        }
+        auto traditional_results = this->traditional_detector_->detect(message.img);
+        
+        // 将传统检测结果转换为OpenvinoInfer::Light格式
+        for (const auto& result : traditional_results) {
+            OpenvinoInfer::Light light;
+            light.center_point = result.center;
+            light.score = result.confidence;
+            // 根据半径创建边界框
+            int radius = static_cast<int>(result.radius);
+            light.box = cv::Rect(
+                static_cast<int>(result.center.x) - radius,
+                static_cast<int>(result.center.y) - radius,
+                radius * 2,
+                radius * 2
+            );
+            infer_results.push_back(light);
+        }
+        
+        //std::cout << "Traditional detection found " << infer_results.size() << " lights" << std::endl;
+    }
+    else{
+        //使用深度学习检测
+        if(this->openvino_infer_== nullptr){
+            std::cout<< "openvino infer is not null"<<std::endl;
+            return;
+        }       
+        infer_results = this->openvino_infer_->infer(message.img, cv::Size(640, 384), 0, this->startup_);
+    }
 
     if (this->startup_) {
         this->startup_ = false;

@@ -41,9 +41,9 @@ OpenvinoInfer::OpenvinoInfer(std::map<std::string, std::string> &path) {
             set_element_type(ov::element::f32);
 
     ppp.
-            output(1).
-            tensor().
-            set_element_type(ov::element::f32);
+           output(1).
+           tensor().
+           set_element_type(ov::element::f32);
 
     ppp.
             output(2).
@@ -62,9 +62,51 @@ OpenvinoInfer::OpenvinoInfer(std::map<std::string, std::string> &path) {
 
 std::vector<OpenvinoInfer::Light> OpenvinoInfer::infer(cv::Mat &src, const cv::Size2d &dst_size, const int &my_color, const bool &startup) {
     OpenvinoInfer::Resize resize = OpenvinoInfer::letterBox(src, dst_size);
-//    cv::imshow("resized_image", resize.resized_image);
+    // 高效的颜色过滤方法
+    cv::Mat hsv, combined_mask;
+    
+    // 转换到HSV颜色空间
+    cv::cvtColor(resize.resized_image, hsv, cv::COLOR_BGR2HSV);
+    
+    // 一次性创建综合掩膜
+    combined_mask = cv::Mat::zeros(hsv.size(), CV_8UC1);
+    
+    // 遍历图像，只处理需要的像素
+    for (int i = 0; i < hsv.rows; i++) {
+        for (int j = 0; j < hsv.cols; j++) {
+            cv::Vec3b hsv_pixel = hsv.at<cv::Vec3b>(i, j);
+            int h = hsv_pixel[0];
+            int s = hsv_pixel[1];
+            int v = hsv_pixel[2];
+            
+            // 白灯检测（高亮度，低饱和度）
+            bool is_white = (v > 240 && s < 20);
+            
+            // 黄色检测（特定色调范围）
+            bool is_yellow = (h >= 20 && h <= 45 && s > 80);
+            
+            // 发黄白色检测（低饱和度，高亮度，略带黄色调）
+            bool is_yellowish_white = (h >= 10 && h <= 50 && s < 80 && v > 200);
+            
+            // 如果是需要过滤的颜色，标记为1
+            if (is_white || is_yellow || is_yellowish_white) {
+                combined_mask.at<uchar>(i, j) = 255;
+            }
+        }
+    }
+    
+    // 简单的膨胀操作
+    cv::dilate(combined_mask, combined_mask, cv::getStructuringElement(cv::MORPH_RECT, cv::Size(3, 3)));
+    
+    // 将过滤区域设置为灰色
+    cv::Mat masked_image = resize.resized_image.clone();
+    masked_image.setTo(cv::Scalar(32, 32, 32), combined_mask);
+    
+    // 使用遮蔽后的图像进行推理
+    auto *input_data = (uint8_t *)masked_image.data;
+    cv::imshow("masked_image", masked_image);
 //    cv::waitKey(1);
-    auto *input_data = (uint8_t *)resize.resized_image.data;
+    //auto *input_data = (uint8_t *)resize.resized_image.data;
 
     ov::Tensor input_tensor = ov::Tensor(
             this->compiled_model_.input().get_element_type(),//获取编译后的输入张量元素类型
@@ -154,21 +196,6 @@ std::vector<OpenvinoInfer::Light> OpenvinoInfer::infer(cv::Mat &src, const cv::S
 OpenvinoInfer::Resize OpenvinoInfer::letterBox(cv::Mat &src, const cv::Size2d &dst_size) {
     int w = src.cols;
     int h = src.rows;
-
-    /*换一个地方找一个初始化的地方
-    // 1. 单尺度 Retinex（SSR）去高光
-    cv::Mat retinex;
-    cv::GaussianBlur(src, retinex, cv::Size(0, 0), 15);
-    src.convertTo(retinex, CV_32F);
-    cv::log(retinex + 1.0f, retinex);
-    cv::normalize(retinex, retinex, 0, 255, cv::NORM_MINMAX);
-    retinex.convertTo(src, CV_8U);
-
-    // 2. γ 校正（提亮暗部，压缩过曝）
-    cv::LUT(src, cv::Mat(1, 256, CV_8U, [](int x){
-    return cv::saturate_cast<uchar>(255 * std::pow(x / 255.0, 0.6));
-    }), src);
-    */
 
     double r_w = (double)dst_size.width / w;
     double r_h = (double)dst_size.height / h;

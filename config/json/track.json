@@ -1,6 +1,6 @@
 {
   "selection": {
-    "max_drop_frame": 1.0,
+    "max_drop_frame": 1.5,
     "limit_drop_frame": 1.5,
 
     "min_found_frame": 1.0,
@@ -8,9 +8,9 @@
   },
 
   "euro": {
-    "min_cut_off": 0.5,
-    "beta": 0.5,
-    "d_cut_off": 0.5
+    "min_cut_off": 1.5,    
+    "beta": 0.6,           
+    "d_cut_off": 0.4       
   },
 
   "ktrack": {
@@ -20,15 +20,15 @@
   "choice": "82_84_88_105",
   "group": {
     "82_84_88_105": {
-      "0": 0,
+      "0":  0,
 
-      "1": 5,
+      "1":  6.5,
 
-      "2": -6,
+      "2":  0,
 
-      "3": -4,
+      "3":  0,
 
-      "4": -6
+      "4": 0
     }
   },
 

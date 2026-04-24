@@ -175,16 +175,29 @@ void Track::updateVisionData() {
     if (this->cache_.cd.number < 1 && !this->cache_.cd.mode) {
         this->config_.release();
         this->config_.open(this->path_, cv::FileStorage::WRITE);
-        this->config_ << "begin" << vec.center_point.x;
+        this->config_ << "begin" << vec.center_point.y;
         this->config_.release();
         this->config_.open(this->path_, cv::FileStorage::READ);
     }
     std::string choice;
     J_TRACK.config_["choice"] >> choice;
-    this->vd_.yaw_error = -float(float(this->config_["begin"]) - vec.center_point.x -
+    this->vd_.yaw_error = float(float(this->config_["begin"]) - vec.center_point.y -
             ((float)J_TRACK.config_["group"][choice]["0"] + (float)J_TRACK.config_["group"][choice][std::to_string(this->cache_.cd.number)]));
 //    this->vd_.yaw_error = J_TRACK.config_["death"];
     auto ori = this->cache_.ori_mat.clone();
+
+     // 绘制基准线（绿色）
+    //cv::line(ori, cv::Point(0, baseline), cv::Point(ori.cols, baseline), cv::Scalar(0, 255, 0), 2);
+    //cv::putText(ori, "baseline", cv::Point(5, baseline - 5), cv::FONT_HERSHEY_SIMPLEX, 0.5, cv::Scalar(0, 255, 0), 1);
+    
+    // 绘制目标点线（蓝色）
+    //cv::line(ori, cv::Point(0, vec.center_point.y), cv::Point(ori.cols, vec.center_point.y), cv::Scalar(255, 0, 0), 2);
+    //cv::putText(ori, "target", cv::Point(5, vec.center_point.y - 5), cv::FONT_HERSHEY_SIMPLEX, 0.5, cv::Scalar(255, 0, 0), 1);
+    
+    // 绘制差值线（红色）
+    //cv::line(ori, cv::Point(ori.cols / 2, baseline), cv::Point(ori.cols / 2, vec.center_point.y), cv::Scalar(0, 0, 255), 2);
+    //cv::putText(ori, "error: " + std::to_string(this->vd_.yaw_error), cv::Point(ori.cols / 2 + 5, (baseline + vec.center_point.y) / 2), cv::FONT_HERSHEY_SIMPLEX, 0.5, cv::Scalar(0, 0, 255), 1);
+
     cv::circle(ori, aim, 3, cv::Scalar(0, 0, 255), -1);
     cv::rectangle(ori, vec.box, cv::Scalar(255, 255, 255), 2);
     cv::putText(ori,

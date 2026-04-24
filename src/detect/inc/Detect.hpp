@@ -6,6 +6,7 @@
 #include "lockfree/LockFree.hpp"
 #include "openvino/OpenvinoInfer.hpp"
 #include "global/Struct.hpp"
+#include "traditional/traditional_detect.hpp"
 
 class Detect {
 public:
@@ -18,8 +19,11 @@ public:
             LfStack<ImageInfo> &image_info_stack,
             LfStack <ImageInfo> &mouse_info_stack);
 
+    bool useTraditionalDetector() const; //是否使用传统检测方案
+
 private:
     OpenvinoInfer *openvino_infer_;
+    GreenLightDetector *traditional_detector_; //传统检测方案
 
     FromData last_message_;//上一帧的信息
 
@@ -28,6 +32,8 @@ private:
     bool startup_ = true;//是否是启动状态
 
     std::string mode_;//不同检测方案
+
+    bool useTraditionalDetection() const ; //是否使用传统检测方案
 
 };
 

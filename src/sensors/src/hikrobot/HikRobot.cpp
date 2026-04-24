@@ -53,12 +53,13 @@ void HikRobot::cameraInit() {
             //this->setEnumValue("ADCBitDepth", 0);
             this->setBoolValue("AcquisitionFrameRateEnable", true);
             this->setFloatValue("AcquisitionFrameRate", 250.0);
-            this->setResolution(-1, 384, 300, -1, 640, 0);
+            this->setResolution(-1, 384, 650, -1, 640, 0);
+
+            setFloatValue("ExposureTime", 3000);
+            setFloatValue("Gain", 8.0);//0~16
             if (!this->grapImage()) {
                 return;
             }
-            setFloatValue("ExposureTime", 3000);
-            setFloatValue("Gain", 8.0);//0~16
             ++this->camera_size_;
         }
     } else {
@@ -273,12 +274,12 @@ void HikRobot::cameraModeChange(int now_mode, int my_color) {
     if ((now_mode == 1 || now_mode == 0) && (now_mode != this->pre_mode_ || my_color != this->pre_my_color_)) {
         if (my_color == 0) {
             std::cout << "Detect Red." << std::endl;
-            float val = J_DETECT.config_["camera"]["hikrobot"]["exposure"]["red_exposure"];
+            float val = J_SENSORS.config_["camera"]["hikrobot"]["exposure"]["red_exposure"];
             std::cout << "val = " << val << std::endl;
             this->setFloatValue("ExposureTime", val);
         } else if (my_color == 1) {
             std::cout << "Detect Blue." << std::endl;
-            float val = J_DETECT.config_["camera"]["hikrobot"]["exposure"]["blue_exposure"];
+            float val = J_SENSORS.config_["camera"]["hikrobot"]["exposure"]["blue_exposure"];
             std::cout << "val = " << val << std::endl;
             this->setFloatValue("ExposureTime", val);
         }
@@ -297,22 +298,23 @@ void HikRobot::assertSuccess(uint32_t status) {
 
 void HikRobot::getImage() {
 
-   // std::cout<< "start"<<std::endl;
+    std::cout<< "start"<<std::endl;
 
     CarData car_data;
 
     //调试时暂时删去！！！！！
-    //while(!this->sp_.receive(car_data)) {
-        //std::cout<< "don‘t have data"<<std::endl;
-    //    std::this_thread::sleep_for(std::chrono::milliseconds(5));
-    car_data.mode = 1;
-    car_data.status = 0;
-    car_data.number = 1;
-    car_data.dune = 0;
-    //}
+    while(!this->sp_.receive(car_data)) {
+        std::cout<< "don‘t have data"<<std::endl;
+        std::this_thread::sleep_for(std::chrono::milliseconds(5));
+    //car_data.mode = 1;
+    //car_data.status = 0;
+    //car_data.number = 1;
+    //car_data.dune = 0;
+    }
 
-//    this->cameraModeChange(car_data.mode, car_data.my_color);
-    //std::cout<< "have data"<<std::endl;
+    int my_color = 0;
+    this->cameraModeChange(car_data.mode, my_color);
+    std::cout<< "have data"<<std::endl;
     this->message_.cd = car_data;
     this->message_.timestamp = function::getNowTimestamp();
     this->error_ = function::getNowTimestamp();

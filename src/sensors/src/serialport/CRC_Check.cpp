@@ -138,7 +138,7 @@ uint32_t Verify_CRC16_Check_Sum(uint8_t *pchMessage, uint32_t dwLength)
 	return ((wExpected & 0xff) == pchMessage[dwLength - 2] && ((wExpected >> 8) & 0xff) == pchMessage[dwLength - 1]);
 	
 	//小端格式
-	//uint16_t received_crc = *(uint16_t*)&pchMessage[dwLength - 2];
+	// uint16_t received_crc = *(uint16_t*)&pchMessage[dwLength - 2];
     //return (wExpected == received_crc);
 }
 /*

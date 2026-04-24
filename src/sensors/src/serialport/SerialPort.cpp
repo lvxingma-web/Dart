@@ -57,11 +57,11 @@ bool SerialPort::receive(CarData &cd) {
     std::cout << "Receive Bytes: " << bytes << std::endl;
 
     /* 打印接收的原始数据，使用时删除*/
-    std::cout << "Raw Data: ";
-    for (int i = 0; i < bytes; i++) {
-        printf("%02X ", this->r_data_[i]);
-    }
-    std::cout << std::endl;
+    //std::cout << "Raw Data: ";
+    //for (int i = 0; i < bytes; i++) {
+    //    printf("%02X ", this->r_data_[i]);
+    //}
+    //std::cout << std::endl;
 
     // 查找第一个符合条件的索引
     int first_index = -1;
@@ -110,7 +110,7 @@ void SerialPort::send(VisionData &vd) {
 
     int result = write(this->fd_, this->t_data_, sizeof(VisionData));
     if (result == -1) {
-//        std::cout << "send failed." << std::endl;SSS
+//      std::cout << "send failed." << std::endl;
         this->closePort();
         this->init();
     }
