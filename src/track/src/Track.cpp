@@ -11,9 +11,9 @@ Track::Track(SerialPort &sp, const char *mode) : sp_(sp), mode_(mode) {
     this->last_image_timestamp_ = function::getNowTimestamp();
     this->target_.state = LOST;
 
-    cv::namedWindow("track", cv::WINDOW_NORMAL);
-    cv::moveWindow("track", 1180, 0);
-    cv::resizeWindow("track", cv::Size(300, 768));
+    //cv::namedWindow("track", cv::WINDOW_NORMAL);
+    //cv::moveWindow("track", 1180, 0);
+    //cv::resizeWindow("track", cv::Size(300, 768));
 }
 
 
@@ -218,8 +218,10 @@ void Track::updateVisionData() {
     cv::putText(ori,
                 "dune: " + std::to_string(this->cache_.cd.dune), cv::Point(0, 300),
                 cv::FONT_HERSHEY_SIMPLEX, 1, cv::Scalar(255, 255, 255), 2);
-    cv::imshow("track", ori);
-    cv::waitKey(1);
+    
+    
+        cv::imshow("track", ori);
+        cv::waitKey(1);
+    
     this->sp_.send(this->vd_);
 }
-

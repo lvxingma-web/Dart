@@ -105,7 +105,7 @@ std::vector<OpenvinoInfer::Light> OpenvinoInfer::infer(cv::Mat &src, const cv::S
     // 使用遮蔽后的图像进行推理
     auto *input_data = (uint8_t *)masked_image.data;
     cv::imshow("masked_image", masked_image);
-//    cv::waitKey(1);
+    cv::waitKey(1);
     //auto *input_data = (uint8_t *)resize.resized_image.data;
 
     ov::Tensor input_tensor = ov::Tensor(

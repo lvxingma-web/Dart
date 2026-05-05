@@ -13,7 +13,7 @@
 #endif
 #include "Capture.hpp"
 
-//#define DUMP
+#define DUMP
 #ifndef DUMP
 #define CAPTURE
 #else

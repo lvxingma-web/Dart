@@ -236,6 +236,9 @@ Dart_SOURCE_DIR:STATIC=/home/ganjie/Vision_Code
 //No help, variable specified on the command line.
 FlatBuffers_DIR:UNINITIALIZED=/usr/local/lib/cmake/flatbuffers
 
+//No help, variable specified on the command line.
+OPENCV_DISABLE_GUI:UNINITIALIZED=ON
+
 //The directory containing a CMake configuration file for OpenCV.
 OpenCV_DIR:PATH=/usr/lib/x86_64-linux-gnu/cmake/opencv4
 

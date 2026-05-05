@@ -214,7 +214,13 @@ void DahengCamera::setResolution(
 
         status = GXStreamOff(this->handle_);
 
-        cv::waitKey(200);
+        // 只在有图形界面时使用waitKey
+        if (getenv("DISPLAY")) {
+            cv::waitKey(200);
+        } else {
+            // 无图形界面时，使用标准休眠
+            std::this_thread::sleep_for(std::chrono::milliseconds(200));
+        }
     }
 
     if (status != GX_STATUS_SUCCESS) {
@@ -314,8 +320,8 @@ void DahengCamera::getImage() {
         cv::flip(this->message_.img, this->message_.img, -1);
         cv::flip(this->message_.img, this->message_.img, 1);
 
-        cv::imshow("img", this->message_.img);
-        cv::waitKey(1);
+        //cv::imshow("img", this->message_.img);
+        //cv::waitKey(1);
     } else {
         printf("Unsupported PixelType.\n");
         return;

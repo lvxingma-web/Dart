@@ -54,7 +54,7 @@ bool SerialPort::receive(CarData &cd) {
     }
 
     bytes = read(this->fd_, this->r_data_, bytes);
-    std::cout << "Receive Bytes: " << bytes << std::endl;
+    //std::cout << "Receive Bytes: " << bytes << std::endl;
 
     /* 打印接收的原始数据，使用时删除*/
     //std::cout << "Raw Data: ";
@@ -76,7 +76,7 @@ bool SerialPort::receive(CarData &cd) {
     }
 
     int max_mul = (bytes - first_index) / sizeof(CarData);
-    printf("max_mul: %d\n", max_mul);
+    //printf("max_mul: %d\n", max_mul);
 
     if (first_index != -1) {
         int index = first_index + (max_mul - 1) *sizeof(CarData);

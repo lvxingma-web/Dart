@@ -53,7 +53,7 @@ void HikRobot::cameraInit() {
             //this->setEnumValue("ADCBitDepth", 0);
             this->setBoolValue("AcquisitionFrameRateEnable", true);
             this->setFloatValue("AcquisitionFrameRate", 250.0);
-            this->setResolution(-1, 384, 650, -1, 640, 0);
+            this->setResolution(-1, 384, 680, -1, 640, 0);
 
             setFloatValue("ExposureTime", 3000);
             setFloatValue("Gain", 8.0);//0~16
