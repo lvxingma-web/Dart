@@ -1,7 +1,96 @@
 # Dart
 
-- 功能说明： 用于飞镖引导灯识别
+- 功能说明： 适用于飞镖本赛季前哨站引导灯识别
 
-# 功能修改中：
-- 1、大恒相机适配
-- 2、本赛季仅用于前哨站识别引导灯
+├── .gitignore
+├── CMakeLists.txt
+├── config                              // 配置文件
+│  ├── flatbuffers
+│  ├── json
+│  └── openvino
+├── LICENSE
+├── main.cpp                            // 主函数
+├── README.md
+└── src
+  ├── capture                           // 录包模块
+  │  ├── CMakeLists.txt
+  │  ├── inc
+  │  │  └── Capture.hpp
+  │  └── src
+  │    └── Capture.cpp
+  ├── detect                            // 检测模块
+  │  ├── CMakeLists.txt
+  │  ├── inc
+  │  │  ├── Detect.hpp
+  │  │  └── openvino
+  │  │    └── OpenvinoInfer.hpp
+  │  └── src
+  │    ├── Detect.cpp
+  │    └── openvino
+  │      └── OpenvinoInfer.cpp
+  ├── mouse                             // 小屏幕辅助函数
+  │  ├── CMakeLists.txt
+  │  ├── inc
+  │  │  └── Mouse.hpp
+  │  └── src
+  │    └── Mouse.cpp
+  ├── sensors                           // 传感器模块
+  │  ├── CMakeLists.txt
+  │  ├── inc
+  │  │  ├── hikrobot
+  │  │  │  ├── HikRobot.hpp
+  │  │  │  └── inc
+  │  │  │    ├── CameraParams.h
+  │  │  │    ├── MvCameraControl.h
+  │  │  │    ├── MvErrorDefine.h
+  │  │  │    ├── MvISPErrorDefine.h
+  │  │  │    └── PixelType.h
+  │  │  ├── sensors.hpp
+  │  │  ├── sensors.inl
+  │  │  └── serialport
+  │  │    ├── CRC_Check.h
+  │  │    └── SerialPort.h
+  │  └── src
+  │    ├── hikrobot
+  │    │  └── HikRobot.cpp
+  │    ├── sensors.cpp
+  │    └── serialport
+  │      ├── CRC_Check.cpp
+  │      └── SerialPort.cpp
+  ├── threads                           // 线程间模块
+  │  ├── CMakeLists.txt
+  │  └── inc
+  │    ├── lockfree
+  │    │  ├── LockFree.hpp
+  │    │  └── LockFree.inl
+  │    └── threadpool
+  │      └── ThreadPool.hpp
+  ├── track                             // 决策模块
+  │  ├── CMakeLists.txt
+  │  ├── inc
+  │  │  ├── filter
+  │  │  │  └── OneEuroFilter.hpp
+  │  │  └── Track.hpp
+  │  └── src
+  │    ├── filter
+  │    │  └── OneEuroFilter.cpp
+  │    └── Track.cpp
+  └── utility                           // 工具函数
+    ├── CMakeLists.txt
+    ├── inc
+    │  ├── dump
+    │  │  └── dump.hpp
+    │  ├── function
+    │  │  └── function.hpp
+    │  ├── global
+    │  │  ├── Config.hpp
+    │  │  └── Struct.hpp
+    │  ├── json
+    │  │  └── ReJson.hpp
+    │  └── mcap
+    └── src
+      ├── function
+      │  └── function.cpp
+      └── json
+        └── ReJson.cpp
+
