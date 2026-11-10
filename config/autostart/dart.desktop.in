@@ -1,0 +1,11 @@
+# 自启动模板，尚未安装或启用。
+# 使用前将 @DART_ROOT@ 替换为项目绝对路径。
+# XDG 自启动在用户登录图形桌面后执行此启动项。
+[Desktop Entry]
+Type=Application
+Name=Dart Vision
+Comment=启动飞镖视觉识别与跟踪
+Exec=@DART_ROOT@/Dart_upstart.sh
+Path=@DART_ROOT@/build
+Terminal=true
+X-GNOME-Autostart-enabled=true

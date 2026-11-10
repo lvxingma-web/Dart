@@ -1,8 +1,9 @@
 cmake_minimum_required(VERSION 3.25)
 project(capture)
 
-find_package(FlatBuffers REQUIRED)
 find_package(OpenCV REQUIRED)
+find_library(LZ4_LIBRARY NAMES lz4 REQUIRED)
+find_library(ZSTD_LIBRARY NAMES zstd REQUIRED)
 
 file(GLOB_RECURSE ${PROJECT_NAME}_src ${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp ${CMAKE_CURRENT_SOURCE_DIR}/src/*.c)
 
@@ -14,8 +15,8 @@ target_include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/i
 #TODO::need to fix the code in websocket due to C++20
 target_link_libraries(
         ${PROJECT_NAME} PRIVATE
-        /usr/lib/x86_64-linux-gnu/liblz4.so.1.9.3
-        /usr/lib/x86_64-linux-gnu/libzstd.so.1.4.8
+        ${LZ4_LIBRARY}
+        ${ZSTD_LIBRARY}
         flatbuffers::flatbuffers
 )
 target_link_libraries(${PROJECT_NAME} PRIVATE utility)

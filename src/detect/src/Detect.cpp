@@ -15,7 +15,7 @@ Detect::Detect(const char *mode) : mode_(mode) {
         //深度学习检测
         std::map<std::string, std::string> path;
 
-        std::string project_root = "/home/ganjie/Vision_Code/";
+        std::string project_root = DART_PROJECT_ROOT;
         std::string xml_path = project_root + "config/openvino/Katrin.xml";
         std::string bin_path = project_root + "config/openvino/Katrin.bin";
         std::string device = "CPU";

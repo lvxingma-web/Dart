@@ -1,5 +1,5 @@
 ﻿//CRC for serial
-//The code in this file is from the rule of Robomaster
+// CRC16 follows the electrical-control crc.c supplied on 2026-11-05.
 
 #include "serialport/CRC_Check.h"
 
@@ -44,7 +44,7 @@ unsigned int Verify_CRC8_Check_Sum(unsigned char *pchMessage, unsigned int dwLen
 {
 	unsigned char ucExpected = 0;
 
-	if ((pchMessage == 0) || (dwLength <= 2)) return 0;
+	if ((pchMessage == 0) || (dwLength <= 1)) return 0;
 
 	ucExpected = Get_CRC8_Check_Sum(pchMessage, dwLength - 1, CRC8_INIT);
 	return (ucExpected == pchMessage[dwLength - 1]);
@@ -58,7 +58,7 @@ void Append_CRC8_Check_Sum(unsigned char *pchMessage, unsigned int dwLength)
 {
 	unsigned char ucCRC = 0;
 
-	if ((pchMessage == 0) || (dwLength <= 2)) return;
+	if ((pchMessage == 0) || (dwLength <= 1)) return;
 
 	ucCRC = Get_CRC8_Check_Sum((unsigned char *)pchMessage, dwLength - 1, CRC8_INIT);
 	pchMessage[dwLength - 1] = ucCRC;
@@ -116,7 +116,9 @@ uint16_t Get_CRC16_Check_Sum(uint8_t *pchMessage, uint32_t dwLength, uint16_t wC
 	while (dwLength--)
 	{
 		chData = *pchMessage++;
-		(wCRC) = ((uint16_t)(wCRC) >> 8) ^ wCRC_Table[((uint16_t)(wCRC) ^ (uint16_t)(chData)) & 0x00ff];
+		// Match the supplied firmware implementation, including its update direction.
+		const uint8_t index = ((wCRC >> 8) ^ chData) & 0xff;
+		wCRC = static_cast<uint16_t>((wCRC << 8) ^ wCRC_Table[index]);
 	}
 
 	return wCRC;
@@ -134,12 +136,8 @@ uint32_t Verify_CRC16_Check_Sum(uint8_t *pchMessage, uint32_t dwLength)
 		return 0;
 	}
 	wExpected = Get_CRC16_Check_Sum(pchMessage, dwLength - 2, CRC_INIT);
-    //大端格式
+	// CRC bytes are stored low byte first, as in the firmware.
 	return ((wExpected & 0xff) == pchMessage[dwLength - 2] && ((wExpected >> 8) & 0xff) == pchMessage[dwLength - 1]);
-	
-	//小端格式
-	// uint16_t received_crc = *(uint16_t*)&pchMessage[dwLength - 2];
-    //return (wExpected == received_crc);
 }
 /*
 ** Descriptions: append CRC16 to the end of data

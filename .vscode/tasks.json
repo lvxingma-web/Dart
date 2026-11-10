@@ -1,28 +1,43 @@
 {
+    "version": "2.0.0",
     "tasks": [
         {
-            "type": "cppbuild",
-            "label": "C/C++: gcc 生成活动文件",
-            "command": "/usr/bin/gcc",
+            "type": "process",
+            "label": "Dart: Configure (live camera)",
+            "command": "cmake",
             "args": [
-                "-fdiagnostics-color=always",
-                "-g",
-                "${file}",
-                "-o",
-                "${fileDirname}/${fileBasenameNoExtension}"
+                "-S", "${workspaceFolder}",
+                "-B", "${workspaceFolder}/build",
+                "-DCMAKE_BUILD_TYPE=RelWithDebInfo",
+                "-DCMAKE_EXPORT_COMPILE_COMMANDS=ON",
+                "-DDART_DUMP=OFF",
+                "-DDART_CAPTURE=OFF",
+                "-DDART_WITH_DAHENG=OFF"
             ],
             "options": {
-                "cwd": "${fileDirname}"
+                "cwd": "${workspaceFolder}"
             },
-            "problemMatcher": [
-                "$gcc"
+            "problemMatcher": [],
+            "detail": "配置海康实机模式，关闭离线回放、录像和大恒相机依赖。"
+        },
+        {
+            "type": "process",
+            "label": "Dart: Build",
+            "command": "cmake",
+            "args": [
+                "--build", "${workspaceFolder}/build",
+                "--parallel", "2"
             ],
+            "dependsOn": "Dart: Configure (live camera)",
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "problemMatcher": ["$gcc"],
             "group": {
                 "kind": "build",
                 "isDefault": true
             },
-            "detail": "调试器生成的任务。"
+            "detail": "构建整个 Dart 项目；N100 默认使用两个编译任务。"
         }
-    ],
-    "version": "2.0.0"
+    ]
 }

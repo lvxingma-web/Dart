@@ -1,7 +1,9 @@
 #include "threadpool/ThreadPool.hpp"
 #include "lockfree/LockFree.hpp"
 #include "hikrobot/HikRobot.hpp"
+#ifdef DART_WITH_DAHENG
 #include "daheng_camera/daheng_camera.hpp"
+#endif
 
 #include "Detect.hpp"
 #include "Track.hpp"
@@ -13,10 +15,8 @@
 #endif
 #include "Capture.hpp"
 
-#define DUMP
-#ifndef DUMP
-#define CAPTURE
-#else
+// DUMP and CAPTURE are selected by CMake; live debugging leaves both disabled.
+#ifdef DUMP
 #include "dump/dump.hpp"
 #endif
 
@@ -42,9 +42,12 @@ int main() {
 
         //2、动态创建相机
         std::unique_ptr<sensors::BaseCamera> cmaera;
+#ifdef DART_WITH_DAHENG
         if (type == "daheng") {
             cmaera = std::make_unique<DahengCamera>(sp);
-        }else if (type == "hikrobot"){
+        }else
+#endif
+        if (type == "hikrobot"){
             cmaera = std::make_unique<HikRobot>(sp);
         }else{
             std::cerr<<"unknown camera type"<<type<<std::endl;
@@ -60,7 +63,7 @@ int main() {
     };
 
     auto detect = [&]() -> void {
-        Detect detect("debug");
+        Detect detect("traditional");
 
         while (1) {
             detect.detect(
@@ -96,7 +99,7 @@ int main() {
         Capture cap("/Dart",
                     "Vision",
                     "foxglove.CaptureInformation",
-                    "/home/ganjie/Vision_Code/config/flatbuffers/CaptureInformation.fbs",
+                    std::string(DART_PROJECT_ROOT) + "config/flatbuffers/CaptureInformation.fbs",
                     "8UC3");
         cap.setMacpPath(function::getBagPath());
         cap.init();

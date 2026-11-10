@@ -30,3 +30,7 @@
 *.exe
 *.out
 *.app
+
+# Local build products and project-specific dependencies
+/build/
+/.deps/

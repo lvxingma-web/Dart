@@ -3,6 +3,7 @@
 #include <unistd.h>
 #include <termios.h>
 #include <cstdlib>
+#include <algorithm>
 
 #include "serialport/CRC_Check.h"
 #include "serialport/SerialPort.h"
@@ -53,7 +54,12 @@ bool SerialPort::receive(CarData &cd) {
         return false;
     }
 
-    bytes = read(this->fd_, this->r_data_, bytes);
+    // A serial read can return less than a frame; only inspect bytes actually read.
+    bytes = read(this->fd_, this->r_data_,
+                 std::min(static_cast<size_t>(bytes), sizeof(this->r_data_)));
+    if (bytes <= 0) {
+        return false;
+    }
     //std::cout << "Receive Bytes: " << bytes << std::endl;
 
     /* 打印接收的原始数据，使用时删除*/
@@ -66,22 +72,22 @@ bool SerialPort::receive(CarData &cd) {
     // 查找第一个符合条件的索引
     int first_index = -1;
     for (int i = 0 ; i < bytes ; i++) {
-        if (this->r_data_[i] == 0xA5 &&
-            first_index == -1 /*&&
-            Verify_CRC8_Check_Sum(&this->r_data_[i], 3) &&
-            Verify_CRC16_Check_Sum(&this->r_data_[i], sizeof(CarData))*/) {
+        if (this->r_data_[i] == 0xA5) {
             first_index = i;
             break;
         }
     }
 
-    int max_mul = (bytes - first_index) / sizeof(CarData);
-    //printf("max_mul: %d\n", max_mul);
-
     if (first_index != -1) {
-        int index = first_index + (max_mul - 1) *sizeof(CarData);
+        const int frame_size = static_cast<int>(sizeof(CarData));
+        if (bytes - first_index < frame_size) {
+            return false;
+        }
+        const int max_mul = (bytes - first_index) / frame_size;
+        const int index = first_index + (max_mul - 1) * frame_size;
         if (this->r_data_[index] == 0xA5 &&
-            Verify_CRC8_Check_Sum(&this->r_data_[index], 3)) {
+            Verify_CRC8_Check_Sum(&this->r_data_[index], 3) &&
+            Verify_CRC16_Check_Sum(&this->r_data_[index], sizeof(CarData))) {
             memcpy(&cd, &this->r_data_[index], sizeof(CarData));
             return true;
         } else {
@@ -101,7 +107,8 @@ void SerialPort::send(VisionData &vd) {
     std::cout<<"\n";
     std::cout<< sizeof(VisionData) <<std::endl;
 
-    //Append_CRC8_Check_Sum(this->t_data_, 2);
+    // CRC16 must cover the final CRC8 byte as well as the payload.
+    Append_CRC8_Check_Sum(this->t_data_, 2);
     Append_CRC16_Check_Sum(this->t_data_, sizeof(VisionData));
 
     for (size_t i = 0; i < sizeof(VisionData); i++) {

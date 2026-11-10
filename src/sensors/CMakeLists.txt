@@ -7,24 +7,28 @@ endif()
 
 find_package(OpenCV REQUIRED)
 
-include_directories(/opt/Galaxy/Galaxy_camera/include)
-include_directories(${CMAKE_SOURCE_DIR}/src/sensors/inc/daheng_camera/daheng)
-
-link_directories  (/opt/Galaxy/Galaxy_camera/lib)
-
-
 file(GLOB_RECURSE ${PROJECT_NAME}_src ${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp ${CMAKE_CURRENT_SOURCE_DIR}/src/*.c)
+if(NOT DART_WITH_DAHENG)
+    list(FILTER ${PROJECT_NAME}_src EXCLUDE REGEX "/daheng_camera/.*\\.(cpp|c)$")
+endif()
 # message(STATUS "src files: ${${PROJECT_NAME}_src}")
 add_library(${PROJECT_NAME} OBJECT ${${PROJECT_NAME}_src})
 
 target_compile_features(${PROJECT_NAME} PUBLIC c_std_99 cxx_std_20)
 
 
-target_link_libraries(${PROJECT_NAME} 
-                        PRIVATE 
-                        "/opt/Galaxy/Galaxy_camera/lib/x86_64/libgxiapi.so"
-                        )
-target_link_libraries(${PROJECT_NAME} PRIVATE "/opt/MVS/lib/64/libMvCameraControl.so")
+if(DART_WITH_DAHENG)
+    find_library(GXIAPI_LIBRARY NAMES gxiapi
+        HINTS /opt/Galaxy/Galaxy_camera/lib/x86_64 /opt/Galaxy/Galaxy_camera/lib
+        REQUIRED)
+    target_include_directories(${PROJECT_NAME} PRIVATE
+        /opt/Galaxy/Galaxy_camera/include
+        ${CMAKE_CURRENT_SOURCE_DIR}/inc/daheng_camera/daheng)
+    target_link_libraries(${PROJECT_NAME} PRIVATE ${GXIAPI_LIBRARY})
+endif()
+find_library(MVS_CAMERA_CONTROL_LIBRARY NAMES MvCameraControl
+    HINTS /opt/MVS/lib/64 REQUIRED)
+target_link_libraries(${PROJECT_NAME} PRIVATE ${MVS_CAMERA_CONTROL_LIBRARY})
 
 target_link_libraries(${PROJECT_NAME} PRIVATE ${OpenCV_LIBS})
 target_include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/inc)
