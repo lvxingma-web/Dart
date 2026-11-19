@@ -9,8 +9,8 @@ public:
     ~SerialPort();
 
     bool init();
-    bool receive(CarData &cd);
-    void send(VisionData &vd);
+    bool receive(CarData &cd); //接收CarData
+    void send(VisionData &vd); //发送数据
     void closePort();
 
 private:
